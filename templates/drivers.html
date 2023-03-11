@@ -1,18 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div>
-        <form action="/register" method="post">
-            <input type="text" name="email">
-            <input type="password" name="password">
-            <input type="submit">
-        </form>
-    </div>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login</title>
+        <link rel="stylesheet" type="text/css" href="{{
+            url_for('static',filename='team.css') }}">
+    </head>
+    <body>
+        <div>
+            <h1>Add Driver Form</h1>
+            <button id="add-driver-btn">Add Driver</button>
+
+            <form id="driver-form" style="display:none;" action="/add_driver"
+                method="POST">
+                <label for="firstName">Name:</label>
+                <input type="text" name="firstName" required><br>
+
+                <label for="age">Age:</label>
+                <input type="number" name="age" required><br>
+
+                <label for="pole_positions">Pole Position:</label>
+                <input type="number" name="pole_positions" required><br>
+
+                <label for="total_race_wins">Total Race Wins:</label>
+                <input type="number" name="total_race_wins" required><br>
+
+                <label for="total_points_scored">Total Points Scored:</label>
+                <input type="number" name="total_points_scored" required><br>
+                <label for="total_world_titles">Total World Titles:</label>
+                <input type="number" name="total_world_titles" required><br>
+                <label for="total_fastest_laps">Total Fastest Laps:</label>
+                <input type="number" name="total_fastest_laps" required><br>
+                <label for="team">Team Drive For:</label>
+                <select name="team" id="team-select">
+                    {% for team in teamNames %}
+                        <option value={{ team.key.id }}>{{ team.name }}</option>
+                    {% endfor %}
+                </select>
+
+
+                <button type="submit">Save</button>
+                <button type="submit" id="cancel-team-btn">cancel</button>
+            </form>
+
+            <script>
+		const addDriverBtn = document.getElementById("add-driver-btn");
+        const cancelTeamBtn = document.getElementById("cancel-team-btn");
+		const driverForm = document.getElementById("driver-form");
+
+		addDriverBtn.addEventListener("click", function() {
+			driverForm.style.display = "block";
+		});
+        cancelTeamBtn.addEventListener("click", function() {
+			driverForm.style.display = 'none';
+            driverForm.reset();
+		});
+
+		// teamForm.addEventListener("submit", function(event) {
+		// 	event.preventDefault();
+		// 	// Handle form submission with JavaScript code
+		// });
+	</script>
+        </div>
+    </body>
 </html>

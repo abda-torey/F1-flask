@@ -1,0 +1,58 @@
+/* form styles */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  label {
+    margin-top: 20px;
+    font-size: 1.2rem;
+  }
+  
+  input[type="text"],
+  input[type="number"] {
+    width: 50%;
+    height: 30px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 5px;
+    font-size: 1.2rem;
+  }
+  
+  button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #0069d9;
+  }
+  
+  /* error message styles */
+  .error {
+    color: red;
+    font-size: 1rem;
+    margin-top: 5px;
+  }
+  
+  /* success message styles */
+  .success {
+    color: green;
+    font-size: 1rem;
+    margin-top: 5px;
+  }
+  
+  /* styles for extending base.html */
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  

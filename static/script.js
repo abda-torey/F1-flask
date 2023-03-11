@@ -1,6 +1,21 @@
 "use strict";
 window.addEventListener("load", function () {
-  var ui = new firebaseui.auth.AuthUI(firebase.auth());
+  var logoutButton = document.getElementById("logout");
+  var loginButton = document.getElementById("login");
+  if (logoutButton) {
+    logoutButton.onclick = function () {
+      // ask firebase to sign out the user
+      firebase.auth().signOut();
+    };
+  }
+   if (loginButton) {
+    loginButton.onclick = function () {
+      var ui = new firebaseui.auth.AuthUI(firebase.auth());
+      ui.start("#firebase-auth-container", uiConfig);
+      document.cookie = "token=";
+    };
+  }
+
   var uiConfig = {
     signInSuccessUrl: "/",
     signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
@@ -13,23 +28,10 @@ window.addEventListener("load", function () {
         user.getIdToken().then(function (token) {
           document.cookie = "token=" + token;
         });
-        document.getElementById("logout").onclick = function () {
-
-          firebase.auth().signOut();
-
-          // clear the token cookie
-          document.cookie = "token=";
-
-          // redirect the user on logout
-          window.location.replace("/");
-          
-          };
       } else {
-       
+        var ui = new firebaseui.auth.AuthUI(firebase.auth());
+        ui.start("#firebase-auth-container", uiConfig);
         document.cookie = "token=";
-        document.getElementById("login").onclick =  function () {
-            ui.start("#firebase-auth-container", uiConfig);
-          };
       }
     },
     function (error) {

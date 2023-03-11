@@ -18,8 +18,8 @@
             <div class="logo">Logo</div>
             <ul class="menu">
                 <li><a href="#">Home</a></li>
-                <li><a href="#">Drivers</a></li>
-                <li><a href="#">Teams</a></li>
+                <li><a href="{{url_for('drivers')}}">Drivers</a></li>
+                <li><a href="{{url_for('teams')}}">Teams</a></li>
                 <li><a href="#">Compare</a></li>
                 {% if user %}
                     <li id="logout"><a href="#">Logout</a></li>
