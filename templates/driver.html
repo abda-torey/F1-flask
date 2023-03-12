@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-6">
+        <button class="btn btn-primary" id="add-driver-button">Add Driver</button>
+    </div>
+    <div class="col-md-6">
+        <button class="btn btn-primary" id="filter-drivers-button">Filter
+            Drivers</button>
+    </div>
+</div>
+
+<div id="add-driver-form" class="form-container" hidden="true">
+    <form id="driver-form" action="/add_driver"
+        method="POST">
+        <label for="firstName">Name:</label>
+        <input type="text" name="firstName" required><br>
+
+        <label for="age">Age:</label>
+        <input type="number" name="age" required><br>
+
+        <label for="pole_positions">Pole Position:</label>
+        <input type="number" name="pole_positions" required><br>
+
+        <label for="total_race_wins">Total Race Wins:</label>
+        <input type="number" name="total_race_wins" required><br>
+
+        <label for="total_points_scored">Total Points Scored:</label>
+        <input type="number" name="total_points_scored" required><br>
+        <label for="total_world_titles">Total World Titles:</label>
+        <input type="number" name="total_world_titles" required><br>
+        <label for="total_fastest_laps">Total Fastest Laps:</label>
+        <input type="number" name="total_fastest_laps" required><br>
+        <label for="team">Team Drive For:</label>
+        <select name="team" id="team-select">
+            {% for team in teamNames %}
+            <option value={{ team.key.id }}>{{ team.name }}</option>
+            {% endfor %}
+        </select>
+
+
+        <button type="submit">Save</button>
+        <button type="submit" id="cancel-team-btn">cancel</button>
+    </form>
+</div>
+
+<div id="filter-drivers-form" class="form-container" hidden="true">
+    <form action="/filter_drivers" method="POST">
+        <div>
+            <label for="team">Team Drive For:</label>
+            <select name="team" id="team-select" class="select">
+                {% for team in teamNames %}
+                <option value={{ team.key.id }}>{{ team.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="wins-filter">Total Wins Filter:</label>
+            <input type="text" class="form-control" id="wins" name="wins">
+        </div>
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Total Wins</th>
+            <th>Team</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for driver in drivers %}
+        <tr>
+            <td>{{ driver.name }}</td>
+            <td>{{ driver.age }}</td>
+            <td>{{ driver.total_race_wins }}</td>
+            <td>{{ driver.team.__class__ }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<ul>
+    {% for team in teamNames %}
+
+    <li>{{team.name}} {{team.key.id.__class__}}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .form-container {
+        display: none;
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .table {
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $("#add-driver-button").click(function() {
+            $("#add-driver-form").toggle();
+            $("#filter-drivers-form").hide();
+        });
+        $("#filter-drivers-button").click(function() {
+            $("#filter-drivers-form").toggle();
+            $("#add-driver-form").hide();
+        });
+    });
+</script>
+{% endblock %}
