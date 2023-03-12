@@ -1,18 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='team.css') }}">
-</head>
-<body>
-   <div>
-    <h1>Add Team Form</h1>
-	<button id="add-team-btn">Add Team</button>
+{% extends "base.html" %}
 
-	<form id="team-form" style="display:none;" action="/add_team" method="POST">
+{% block content %}
+
+<div class="row">
+	<div class="col-md-6">
+		<button class="btn btn-primary" id="add-team-button">Add Team</button>
+	</div>
+	<div class="col-md-6">
+		<button class="btn btn-primary" id="filter-teams-button">Filter
+			Teams</button>
+	</div>
+</div>
+<div id="add-team-form" class="form-container" hidden="true">
+	<form id="team-form" action="/add_team" method="POST">
 		<label for="name">Team Name:</label>
 		<input type="text" name="name" required><br>
 		<label for="year_founded">Year Founded:</label>
@@ -31,27 +31,89 @@
 		<input type="number" name="prevSeason_pos" required><br>
 
 		<button type="submit">Save</button>
-        <button type="submit" id="cancel-team-btn">cancel</button>
+		<button type="submit" id="cancel-team-btn">cancel</button>
 	</form>
 
-	<script>
-		const addTeamBtn = document.getElementById("add-team-btn");
-        const cancelTeamBtn = document.getElementById("cancel-team-btn");
-		const teamForm = document.getElementById("team-form");
+</div>
 
-		addTeamBtn.addEventListener("click", function() {
-			teamForm.style.display = "block";
-		});
-        cancelTeamBtn.addEventListener("click", function() {
-			teamForm.style.display = 'none';
-            teamForm.reset();
-		});
 
-		// teamForm.addEventListener("submit", function(event) {
-		// 	event.preventDefault();
-		// 	// Handle form submission with JavaScript code
-		// });
+<div id="filter-team-form" class="form-container" hidden="true">
+	<form action="/filter_teams" method="POST">
+		<div>
+
+		</div>
+		<div class="form-group">
+			<label for="total_c_tiitles">Total Cup Titles:</label>
+			<input type="number" class="form-control" id="total_c_titles"
+				name="total_c_titles">
+		</div>
+		<button type="submit" class="btn btn-primary">Filter</button>
+	</form>
+</div>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Previous Season Pos</th>
+			<th>Total Cup Titles</th>
+			<th>Total Race Wins</th>
+
+			<th>Year Founded</th>
+
+		</tr>
+	</thead>
+	<tbody>
+		{% for team in teamNames %}
+		<tr>
+			<td>{{ team.name }}</td>
+			<td>{{ team.prevSeason_pos }}</td>
+			<td>{{ team.total_c_titles }}</td>
+			<td>{{ team.total_race_w}}</td>
+			<td>{{ team.year_founded}}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% endblock %}
+
+{% block styles %}
+<style>
+    .form-container {
+        display: none;
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .table {
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+	
+
+		$(document).ready(function() {
+        $("#add-team-button").click(function() {
+            $("#add-team-form").toggle();
+            $("#filter-team-form").hide();
+        });
+		$("#cancel-team-btn").click(function() {
+            $("#add-team-form").reset();
+            $("#add-team-form").hide();
+        });
+        $("#filter-teams-button").click(function() {
+            $("#filter-team-form").toggle();
+            $("#add-team-form").hide();
+        });
+    });
+
+
+	
 	</script>
-   </div> 
-</body>
-</html>
+{% endblock %}

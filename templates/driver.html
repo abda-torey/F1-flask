@@ -79,18 +79,13 @@
             <td>{{ driver.name }}</td>
             <td>{{ driver.age }}</td>
             <td>{{ driver.total_race_wins }}</td>
-            <td>{{ driver.team.__class__ }}</td>
+            <td>{{ driver.teamName}}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
-<ul>
-    {% for team in teamNames %}
 
-    <li>{{team.name}} {{team.key.id.__class__}}</li>
-    {% endfor %}
-</ul>
 {% endblock %}
 
 {% block styles %}

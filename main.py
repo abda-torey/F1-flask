@@ -37,7 +37,7 @@ def retrieveDrivers():
     return drivers
 
 
-def create_driver(name, age, pole_positions, total_race_wins, total_points_scored, total_world_titles, total_fastest_laps, team):
+def create_driver(name, age, pole_positions, total_race_wins, total_points_scored, total_world_titles, total_fastest_laps, teamID, team_name):
     entity_key = datastore_client.key('Drivers')
     entity = datastore.Entity(key=entity_key)
 
@@ -49,7 +49,8 @@ def create_driver(name, age, pole_positions, total_race_wins, total_points_score
         'total_points_scored': total_points_scored,
         'total_world_titles': total_world_titles,
         'total_fastest_laps': total_fastest_laps,
-        'team': team
+        'teamID': teamID,
+        'teamName': team_name
 
     })
     datastore_client.put(entity)
@@ -59,30 +60,44 @@ def create_driver(name, age, pole_positions, total_race_wins, total_points_score
 def filterDriver():
     result = None
 
-    team = request.form['team']
+    team = int(request.form['team'])
     wins = request.form['wins']
     query = datastore_client.query(kind='Drivers')
     if team:
-        query.add_filter('team', '=', team)
+        query.add_filter('teamID', '=', team)
     if wins:
         query.add_filter('total_race_wins', '>=', wins)
 
     drivers = query.fetch()
 
-    return render_template('driver.html', drivers=drivers)
+    teamNames = list(retrieveTeams())
+
+    return render_template('driver.html', drivers=drivers, teamNames=teamNames)
+
+
+@app.route('/filter_teams', methods=['POST'])
+def filterTeams():
+    total_c_titles = request.form['total_c_titles']
+
+    query = datastore_client.query(kind='Teams')
+    if total_c_titles:
+        query.add_filter('total_c_titles', '>', total_c_titles)
+
+    teamNames = query.fetch()
+
+    return render_template('teams.html', teamNames=teamNames)
 
 
 @app.route('/teams')
 def teams():
     teamNames = retrieveTeams()
-    for team in teamNames:
-        print(team['name'])
-    return render_template('teams.html')
+
+    return render_template('teams.html', teamNames=teamNames)
 
 
 @app.route('/add_team', methods=['POST'])
 def addTeam():
-    
+
     name = request.form['name']
     year_founded = request.form['year_founded']
     total_p_pos = request.form['total_p_pos']
@@ -99,7 +114,6 @@ def addTeam():
 def drivers():
     teamNames = list(retrieveTeams())
     drivers = retrieveDrivers()
-    
 
     return render_template('driver.html', teamNames=teamNames, drivers=drivers)
 
@@ -109,6 +123,7 @@ def addDriver():
 
     error_message = None
     teamNames = None
+    team_name = None
     name = request.form['firstName']
     age = request.form['age']
     pole_positions = request.form['pole_positions']
@@ -116,10 +131,16 @@ def addDriver():
     total_points_scored = request.form['total_points_scored']
     total_world_titles = request.form['total_world_titles']
     total_fastest_laps = request.form['total_fastest_laps']
-    team = int(request.form['team'])
+    teamID = int(request.form['team'])
+    teams = retrieveTeams()
+    for team in teams:
+        if team.key.id == teamID:
+            team_name = team['name']
+            break
+
     create_driver(name, age,
-                  pole_positions, total_race_wins, total_points_scored, total_world_titles, total_fastest_laps, team)
-    teamNames = retrieveTeams()
+                  pole_positions, total_race_wins, total_points_scored, total_world_titles, total_fastest_laps, teamID, team_name)
+
     return redirect(url_for('drivers'))
 
     return render_template('driver.html', teamNames=teamNames)
