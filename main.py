@@ -22,12 +22,27 @@ def create_team(name, year_founded, total_p_pos, total_race_w, total_c_titles, p
     })
     datastore_client.put(entity)
 
+def updateTeamDetails(team_id,name, year_founded, total_p_pos, total_race_w, total_c_titles, prevSeason_pos):
+    entity_key = datastore_client.key('Teams',team_id)
+    entity = datastore.Entity(key=entity_key)
+    entity.update({
+        'name': name,
+        'year_founded': year_founded,
+        'total_p_pos': total_p_pos,
+        'total_race_w': total_race_w,
+        'total_c_titles': total_c_titles,
+        'prevSeason_pos': prevSeason_pos
+    })
+    datastore_client.put(entity)
+
 
 def retrieveTeams():
     query = datastore_client.query(kind='Teams')
     teams = query.fetch()
 
     return teams
+
+
 
 
 def retrieveDrivers():
@@ -108,6 +123,41 @@ def addTeam():
                 total_race_w, total_c_titles, prevSeason_pos)
     return redirect(url_for('teams'))
     return render_template('teams.html')
+
+
+@app.route('/team_details/<int:team_id>')
+def team_details(team_id):
+    key = datastore_client.key('Teams',team_id)
+    query = datastore_client.query(kind='Teams')
+    query.add_filter('__key__','=',key)
+    teamDetails = query.fetch()
+    
+    
+    return render_template('teamPage.html', teamDetails=teamDetails)
+
+@app.route('/editable_team/<int:team_id>')
+def editable_team(team_id):
+    key = datastore_client.key('Teams',team_id)
+    query = datastore_client.query(kind='Teams')
+    query.add_filter('__key__','=',key)
+    teamDetails = query.fetch()
+    
+    
+    return render_template('editTeam.html', teamDetails=teamDetails)
+
+@app.route('/update_team/<int:team_id>',methods=['POST'])
+def update_team(team_id):
+    name = request.form['name']
+    year_founded = request.form['year_founded']
+    total_p_pos = request.form['total_p_pos']
+    total_race_w = request.form['total_race_w']
+    total_c_titles = request.form['total_c_titles']
+    prevSeason_pos = request.form['prevSeason_pos']
+    updateTeamDetails(team_id,name, year_founded, total_p_pos,
+                total_race_w, total_c_titles, prevSeason_pos)
+    
+    return redirect(url_for('teams'))
+   
 
 
 @app.route('/drivers')

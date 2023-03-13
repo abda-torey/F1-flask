@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="edit-team-form" class="container d-flex justify-content-center">
+    {% for team in teamDetails %}
+    <form id="team-form" action="/update_team/{{team.key.id}}" method="POST" class="col-md-6">
+      <div class="form-group">
+        <label for="name">Team Name:</label>
+        <input type="text" class="form-control" name="name" required value={{ team.name }}>
+      </div>
+      <div class="form-group">
+        <label for="year_founded">Year Founded:</label>
+        <input type="number" class="form-control" name="year_founded" required value={{team.year_founded }}>
+      </div>
+      <div class="form-group">
+        <label for="total_pole_position">Total Pole Positions:</label>
+        <input type="number" class="form-control" name="total_p_pos" required value={{team.total_p_pos }}>
+      </div>
+      <div class="form-group">
+        <label for="total_race_wins">Total Race Wins:</label>
+        <input type="number" class="form-control" name="total_race_w" required value={{team.total_race_w }}>
+      </div>
+      <div class="form-group">
+        <label for="total_cup_titles">Total Cup Titles:</label>
+        <input type="number" class="form-control" name="total_c_titles" required value={{team.total_c_titles }}>
+      </div>
+      <div class="form-group">
+        <label for="previous_season_position">Previous Season Position:</label>
+        <input type="number" class="form-control" name="prevSeason_pos" required value={{team.prevSeason_pos }}>
+      </div>
+      <button type="submit" class="btn btn-primary">Update</button>
+      <button type="submit" class="btn btn-secondary" id="cancel-team-btn">cancel</button>
+    </form>
+    {% endfor %}
+  </div>
+  
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    {% for team in teamDetails %}
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <h1 class="text-center">{{ team.name }}</h1>
+      </div>
+    <table class="table table-striped mt-4">
+        <thead>
+
+            <tr>
+                <th>Details</th>
+                <th>Value</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Previous Season Position</td>
+                <td>{{ team.prevSeason_pos }}</td>
+
+            </tr>
+            <tr>
+                <td>Total Cup Titles</td>
+                <td>{{ team.total_c_titles }}</td>
+
+            </tr>
+            <tr>
+                <td>Total Pole Positions</td>
+                <td>{{ team.total_p_pos }}</td>
+
+            </tr>
+            <tr>
+                <td>Total Race Wins</td>
+                <td>{{ team.total_race_w }}</td>
+
+            </tr>
+            <tr>
+                <td>Year Founded</td>
+                <td>{{ team.year_founded }}</td>
+
+            </tr>
+        </tbody>
+    </table>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        
+        <a href="{{url_for('editable_team',team_id = team.key.id)}}"><button class="btn btn-primary">
+            <i class="fas fa-edit"></i>
+            Edit
+            </button></a>
+        </button>
+      </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://kit.fontawesome.com/05a12e927f.js" crossorigin="anonymous"></script>
+{% endblock %}
