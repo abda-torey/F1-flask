@@ -6,11 +6,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link
             href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
-            rel="stylesheet"
-          >
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-          <link type="text/css" rel="stylesheet"
-          href="{{url_for('static',filename='style.css')}}">
+            rel="stylesheet">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+            />
+        <link type="text/css" rel="stylesheet"
+            href="{{url_for('static',filename='style.css')}}">
         <style>
         /* Style for the dark menu */
         .navbar {
@@ -33,7 +34,8 @@
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">
-                    <img src="{{ url_for('static', filename='Images/logo.png') }}"
+                    <img src="{{ url_for('static', filename='Images/logo.png')
+                        }}"
                         alt="Logo" height="30">
                 </a>
                 <button class="navbar-toggler" type="button"
@@ -53,8 +55,14 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{url_for('drivers')}}">Drivers</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{url_for('compare_drivers')}}">Compare</a>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Compare <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{url_for('compare_drivers')}}">Compare Drivers</a></li>
+                                <li><a href="{{url_for('compare_teams')}}">Compare Teams</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/compare">Login</a>
@@ -69,11 +77,10 @@
             {% endblock %}
         </div>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"
-            ></script>
         <script
-            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
-           ></script>
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.14.5/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
         <script src="{{ url_for('static', filename='app-setup.js') }}"></script>

@@ -12,7 +12,7 @@
                     <select class="form-control" id="driver1" name="driver1">
                         <option value="">-- Select Driver 1 --</option>
                         {% for driver in drivers %}
-                        <option value={{driver.key.id }}>{{ driver.name}}</option>
+                        <option value={{driver.key.name }}>{{ driver.name}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -23,7 +23,7 @@
                     <select class="form-control" id="driver2" name="driver2">
                         <option value="">-- Select Driver 2 --</option>
                         {% for driver in drivers %}
-                        <option value={{driver.key.id }}>{{ driver.name}}</option>
+                        <option value={{driver.key.name }}>{{ driver.name}}</option>
                         {% endfor %}
                     </select>
                 </div>

@@ -12,7 +12,58 @@
     </div>
 </div>
 
-<div id="add-driver-form" class="form-container" hidden="true">
+</br></br>
+{% if error %}
+<div id="error-alert" class="alert alert-danger" role="alert">{{ error }}</div>
+{% endif %}
+</br></br></br></br>
+<div id="add-driver-form" class="container d-flex justify-content-center" hidden="true">
+    
+    <form id="driver-form" action="/add_driver" method="POST" class="col-md-6">
+        <div class="form-group">
+            <label for="firstName">Name:</label>
+            <input type="text" name="firstName" required  class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" name="age" required  class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="pole_positions">Pole Position:</label>
+            <input type="number" name="pole_positions" required  class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="total_race_wins">Total Race Wins:</label>
+            <input type="number" name="total_race_wins" required  class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="total_points_scored">Total Points Scored:</label>
+            <input type="number" name="total_points_scored" required  class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="total_world_titles">Total World Titles:</label>
+            <input type="number" name="total_world_titles" required  class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="total_fastest_laps">Total Fastest Laps:</label>
+            <input type="number" name="total_fastest_laps" required  class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="team">Team Drive For:</label>
+            <select name="team" id="team-select" class="form-control">
+                
+                {% for team in teamNames %}
+                <option value={{ team.key.name }}>{{ team.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" id="cancel-team-btn" class="btn btn-secondary">Cancel</button>
+    </form>
+   
+</div>
+
+<!-- <div id="add-driver-form" class="form-container" hidden="true">
     <form id="driver-form" action="/add_driver"
         method="POST">
         <label for="firstName">Name:</label>
@@ -36,7 +87,7 @@
         <label for="team">Team Drive For:</label>
         <select name="team" id="team-select">
             {% for team in teamNames %}
-            <option value={{ team.key.id }}>{{ team.name }}</option>
+            <option value={{ team.key.name }}>{{ team.name }}</option>
             {% endfor %}
         </select>
 
@@ -44,7 +95,7 @@
         <button type="submit">Save</button>
         <button type="submit" id="cancel-team-btn">cancel</button>
     </form>
-</div>
+</div> -->
 
 <div id="filter-drivers-form" class="form-container" hidden="true">
     <form action="/filter_drivers" method="POST">
@@ -52,13 +103,13 @@
             <label for="team">Team Drive For:</label>
             <select name="team" id="team-select" class="select">
                 {% for team in teamNames %}
-                <option value={{ team.key.id }}>{{ team.name }}</option>
+                <option value={{ team.key.name }}>{{ team.name }}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="form-group">
-            <label for="wins-filter">Total Wins Filter:</label>
-            <input type="text" class="form-control" id="wins" name="wins">
+            <label for="wins">Total Wins Filter:</label>
+            <input type="number" class="form-control" id="wins" name="wins">
         </div>
         <button type="submit" class="btn btn-primary">Filter</button>
     </form>
@@ -77,12 +128,12 @@
     <tbody>
         {% for driver in drivers %}
         <tr>
-            <td><a href="{{url_for('driver_details',driver_id=
-                    driver.key.id)}}">{{ driver.name }}</a></td>
+            <td><a href="{{url_for('driver_details',name=
+                    driver.key.name)}}">{{ driver.name }}</a></td>
             <td>{{ driver.age }}</td>
             <td>{{ driver.total_race_wins }}</td>
             <td>{{ driver.teamName}}</td>
-            <td><a href="{{url_for('delete_driver',driver_id= driver.key.id)}}"><i
+            <td><a href="{{url_for('delete_driver',name= driver.key.name)}}"><i
                         class="fas fa-trash-alt" style="color: red;"></i></a></td>
         </tr>
         {% endfor %}

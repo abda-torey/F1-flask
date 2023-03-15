@@ -4,10 +4,10 @@
 
 <div id="edit-team-form" class="container d-flex justify-content-center">
     {% for team in teamDetails %}
-    <form id="team-form" action="/update_team/{{team.key.id}}" method="POST" class="col-md-6">
+    <form id="team-form" action="/update_team/{{team.key.name}}" method="POST" class="col-md-6">
       <div class="form-group">
         <label for="name">Team Name:</label>
-        <input type="text" class="form-control" name="name" required value={{ team.name }}>
+        <input type="text" class="form-control" name="name" required value={{ team.name }} readonly>
       </div>
       <div class="form-group">
         <label for="year_founded">Year Founded:</label>

@@ -11,7 +11,13 @@
 			Teams</button>
 	</div>
 </div>
+</br></br>
+{% if error %}
+<div id="error-alert" class="alert alert-danger" role="alert">{{ error }}</div>
+{% endif %}
+</br></br></br></br>
 <div id="add-team-form" class="form-container" hidden="true">
+
 	<form id="team-form" action="/add_team" method="POST">
 		<label for="name">Team Name:</label>
 		<input type="text" name="name" required><br>
@@ -67,13 +73,14 @@
 	<tbody>
 		{% for team in teamNames %}
 		<tr>
-			<td><a href="{{url_for('team_details',team_id = team.key.id)}}"
+			<td><a href="{{url_for('team_details',name= team.key.name)}}"
 					class="text-primary font-weight-bold stretched-link">{{ team.name }}</a></td>
 			<td>{{ team.prevSeason_pos }}</td>
 			<td>{{ team.total_c_titles }}</td>
 			<td>{{ team.total_race_w}}</td>
 			<td>{{ team.year_founded}}</td>
-			<td><a href="{{url_for('delete_team',team_id = team.key.id)}}"><i class="fas fa-trash-alt" style="color: red;"></i></a></td>
+			<td><a href="{{url_for('delete_team',name= team.key.name)}}"><i class="fas
+						fa-trash-alt" style="color: red;"></i></a></td>
 		</tr>
 		{% endfor %}
 	</tbody>

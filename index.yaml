@@ -1,5 +1,6 @@
 indexes:
 - kind: Drivers
   properties:
-  - name: teamID
+  - name: teamName
   - name: total_race_wins
+

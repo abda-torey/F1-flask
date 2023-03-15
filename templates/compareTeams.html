@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h2 class="text-center">Compare Teams</h2>
+    <div class="row justify-content-center">
+        <form action="/compare_t" method="POST">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="team1">Team 1:</label>
+                    <select class="form-control" id="team1" name="team1">
+                        <option value="">-- Select Team 1 --</option>
+                        {% for team in teamNames %}
+                        <option value={{team.key.name }}>{{ team.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="team2">Team 2:</label>
+                    <select class="form-control" id="team2" name="team2">
+                        <option value="">-- Select Team 2 --</option>
+                        {% for team in teamNames %}
+                        <option value={{team.key.name }}>{{ team.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-8 text-center mt-4">
+            <button type="submit" class="btn btn-primary">Compare</button>
+        </div>
+        </form>
+    </div>
+
+    {% if team1 and team2 %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th></th>
+                        <th>{{ team1['name'] }}</th>
+                        <th>{{ team2['name'] }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Previous Season Position</td>
+                        <td class = "{% if team1.prevSeason_pos|int < team2.prevSeason_pos|int %}classHighlight{% endif %}">{{ team1.prevSeason_pos }}</td>
+                        <td class = "{% if team2.prevSeason_pos|int < team1.prevSeason_pos|int %}classHighlight{% endif %}">{{ team2.prevSeason_pos }}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Constructor Titles</td>
+                        <td class = "{% if team1.total_c_titles|int > team2.total_c_titles|int %}classHighlight{% endif %}">{{ team1['total_c_titles'] }}</td>
+                        <td class = "{% if team2.total_c_titles|int > team1.total_c_titles|int %}classHighlight{% endif %}">{{ team2['total_c_titles'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Pole Positions</td>
+                        <td class = "{% if team1.total_p_pos|int > team2.total_p_pos|int %}classHighlight{% endif %}">{{ team1['total_p_pos'] }}</td>
+                        <td class = "{% if team2.total_p_pos|int > team1.total_p_pos|int %}classHighlight{% endif %}">{{ team2['total_p_pos'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Race Wins</td>
+                        <td class = "{% if team1.total_race_w|int > team2.total_race_w|int %}classHighlight{% endif %}">{{ team1['total_race_w'] }}</td>
+                        <td class = "{% if team2.total_race_w|int > team1.total_race_w|int %}classHighlight{% endif %}">{{ team2['total_race_w'] }}</td>
+                    </tr>
+                   
+                    <tr>
+                        <td>Year Founded</td>
+                        <td class = "{% if team1.year_founded|int < team2.year_founded|int %}classHighlight{% endif %}">{{ team1['year_founded'] }}</td>
+                        <td class = "{% if team2.year_founded|int < team1.year_founded|int %}classHighlight{% endif %}">{{ team2['year_founded'] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+
+
+{% endblock %}
+
+{% block styles %}
+
+.classHighlight{
+    background-color : yellow;
+    font-weight : bold;
+}
+{% endblock %}
+
+
+{% block scripts %}
+
+{% endblock %}
