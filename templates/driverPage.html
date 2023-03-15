@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    {% for driver in driverDetails %}
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <h1 class="text-center">{{ driver.name }}</h1>
+      </div>
+    <table class="table table-striped mt-4">
+        <thead>
+
+            <tr>
+                <th>Details</th>
+                <th>Value</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Age</td>
+                <td>{{ driver.age }}</td>
+
+            </tr>
+            <tr>
+                <td>Pole Positions</td>
+                <td>{{ driver.pole_positions }}</td>
+
+            </tr>
+            <tr>
+                <td>Team</td>
+                <td>{{ driver.teamName }}</td>
+
+            </tr>
+            <tr>
+                <td>Total Fastest Laps</td>
+                <td>{{ driver.total_fastest_laps }}</td>
+
+            </tr>
+            <tr>
+                <td>Total Points Scored</td>
+                <td>{{ driver.total_points_scored }}</td>
+
+            </tr>
+            <tr>
+                <td>Total Race Wins</td>
+                <td>{{ driver.total_race_wins }}</td>
+
+            </tr>
+            <tr>
+                <td>Total World Titles</td>
+                <td>{{ driver.total_world_titles }}</td>
+
+            </tr>
+        </tbody>
+    </table>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        
+        <a href="{{url_for('editable_driver',driver_id = driver.key.id)}}"><button class="btn btn-primary">
+            <i class="fas fa-edit"></i>
+            Edit
+            </button></a>
+        </button>
+      </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://kit.fontawesome.com/05a12e927f.js" crossorigin="anonymous"></script>
+{% endblock %}

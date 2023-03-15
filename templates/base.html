@@ -8,6 +8,9 @@
             href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
             rel="stylesheet"
           >
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+          <link type="text/css" rel="stylesheet"
+          href="{{url_for('static',filename='style.css')}}">
         <style>
         /* Style for the dark menu */
         .navbar {
@@ -51,7 +54,7 @@
                             <a class="nav-link" href="{{url_for('drivers')}}">Drivers</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/compare">Compare</a>
+                            <a class="nav-link" href="{{url_for('compare_drivers')}}">Compare</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/compare">Login</a>

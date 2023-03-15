@@ -71,15 +71,19 @@
             <th>Age</th>
             <th>Total Wins</th>
             <th>Team</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
         {% for driver in drivers %}
         <tr>
-            <td>{{ driver.name }}</td>
+            <td><a href="{{url_for('driver_details',driver_id=
+                    driver.key.id)}}">{{ driver.name }}</a></td>
             <td>{{ driver.age }}</td>
             <td>{{ driver.total_race_wins }}</td>
             <td>{{ driver.teamName}}</td>
+            <td><a href="{{url_for('delete_driver',driver_id= driver.key.id)}}"><i
+                        class="fas fa-trash-alt" style="color: red;"></i></a></td>
         </tr>
         {% endfor %}
     </tbody>

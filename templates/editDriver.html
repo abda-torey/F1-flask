@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="edit-driver-form" class="container d-flex justify-content-center">
+    {% for driver in driverDetails %}
+    <form id="driver-form" action="/update_driver/{{driver.key.id}}" method="POST" class="col-md-6""
+        method="POST">
+        <div class="form-group">
+        <label for="firstName">Name:</label>
+        <input type="text" name="firstName" required value={{driver.name}}><br>
+    </div>
+        <div class="form-group">
+        <label for="age">Age:</label>
+        <input type="number" name="age" required value={{driver.age}}><br>
+    </div>
+        <div class="form-group">
+        <label for="pole_positions">Pole Position:</label>
+        <input type="number" name="pole_positions" required value={{driver.pole_positions}}><br>
+    </div>
+        <div class="form-group">
+        <label for="total_race_wins">Total Race Wins:</label>
+        <input type="number" name="total_race_wins" required value={{driver.total_race_wins}}><br>
+    </div>
+        <div class="form-group">
+        <label for="total_points_scored">Total Points Scored:</label>
+        <input type="number" name="total_points_scored" required value={{driver.total_points_scored}}><br>
+    </div>
+        <div class="form-group">
+        <label for="total_world_titles">Total World Titles:</label>
+        <input type="number" name="total_world_titles" required value={{driver.total_world_titles}}><br>
+    </div>
+        <div class="form-group">
+        <label for="total_fastest_laps">Total Fastest Laps:</label>
+        <input type="number" name="total_fastest_laps" required value={{driver.total_fastest_laps}}><br>
+    </div>
+        <div class="form-group">
+        <label for="team">Team Drive For:</label>
+        
+        <select name="team" id="team-select" >
+            <option selected>{{ driver.teamName }}</option>
+            {% for team in teamNames %}
+            <option value={{ team.key.id }}>{{ team.name }}</option>
+            {% endfor %}
+        </select>
+
+    </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="submit" id="cancel-team-btn" class="btn btn-secondary">cancel</button>
+    </form>
+    {% endfor %}
+  </div>
+  
+{% endblock %}

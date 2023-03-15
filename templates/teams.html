@@ -60,6 +60,7 @@
 			<th>Total Race Wins</th>
 
 			<th>Year Founded</th>
+			<th>Action</th>
 
 		</tr>
 	</thead>
@@ -72,6 +73,7 @@
 			<td>{{ team.total_c_titles }}</td>
 			<td>{{ team.total_race_w}}</td>
 			<td>{{ team.year_founded}}</td>
+			<td><a href="{{url_for('delete_team',team_id = team.key.id)}}"><i class="fas fa-trash-alt" style="color: red;"></i></a></td>
 		</tr>
 		{% endfor %}
 	</tbody>
