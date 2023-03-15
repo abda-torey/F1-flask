@@ -1,45 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <script src="{{url_for('static', filename='script.js')}}"></script>
-        <link type="text/css" rel="stylesheet"
-            href="{{url_for('static',filename='style.css')}}">
-        <script
-            src="https://www.gstatic.com/firebasejs/ui/4.4.0/firebase-ui-auth.js"></script>
-        <link type="text/css" rel="stylesheet"
-            href="https://www.gstatic.com/firebasejs/ui/4.4.0/firebase-ui-auth.css"/>
-    </head>
-    <body>
-        <div class="navbar">
-            <div class="logo">Logo</div>
-            <ul class="menu">
-                <li><a href="#">Home</a></li>
-                <li><a href="{{url_for('drivers')}}">Drivers</a></li>
-                <li><a href="{{url_for('teams')}}">Teams</a></li>
-                <li><a href="#">Compare</a></li>
-                {% if user %}
-                    <li id="logout"><a href="#">Logout</a></li>
-                {% else %}
-                    <li id="login"><a href="#">Login</a></li>
+{% extends "base.html" %}
 
-                {% endif %}
-                
-            </ul>
-        </div>
-        <div class="container">
-            <div id="firebase-auth-container"></div>
-            <h1>This is the page that will display F1 Details</h1>
-            <p>You can log in to change driver and team details, you do not need
-                to login to compare teams and drivers</p>
-        </div>
-
-
-        <script src="https://www.gstatic.com/firebasejs/7.14.5/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
-        <script src="{{ url_for('static', filename='app-setup.js') }}"></script>
-    </body>
-</html>
+{% block content %}
+<div class="container-full-bg">
+<div class="jumbotron jumbotron-fluid text-white bg-dark" style="background-image: url('/static/Images/car.png'); background-size: cover; background-position: center center; height: 100vh;">
+  <div class="container">
+    <h1 class="display-4">Welcome to the F1 Race</h1>
+    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar sic tempor.</p>
+    <hr class="my-4">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.</p>
+    <a class="btn btn-primary btn-lg" href="{{url_for('teams')}}" role="button">Teams</a>
+    <a class="btn btn-primary btn-lg" href="{{url_for('drivers')}}" role="button">Drivers</a>
+  </div>
+</div>
+</div>
+{% endblock %}

@@ -125,7 +125,7 @@ def filterDriver():
     if team:
         query.add_filter('teamName', '=', team)
     if wins:
-        query.add_filter('total_race_wins', '>=', wins)
+        query.add_filter('total_race_wins', '>=', int(wins))
 
     print(type(wins))
     drivers = query.fetch()
@@ -226,11 +226,11 @@ def editable_driver(name):
 @app.route('/update_team/<string:name>', methods=['POST'])
 def update_team(name):
     name = request.form['name'].lower()
-    year_founded = request.form['year_founded']
-    total_p_pos = request.form['total_p_pos']
-    total_race_w = request.form['total_race_w']
-    total_c_titles = request.form['total_c_titles']
-    prevSeason_pos = request.form['prevSeason_pos']
+    year_founded = int(request.form['year_founded'])
+    total_p_pos = int(request.form['total_p_pos'])
+    total_race_w = int(request.form['total_race_w'])
+    total_c_titles = int(request.form['total_c_titles'])
+    prevSeason_pos = int(request.form['prevSeason_pos'])
     updateTeamDetails(name, year_founded, total_p_pos,
                       total_race_w, total_c_titles, prevSeason_pos)
 
@@ -242,12 +242,12 @@ def update_driver(name):
     teamNames = None
     team_name = None
     name = request.form['firstName'].lower()
-    age = request.form['age']
-    pole_positions = request.form['pole_positions']
-    total_race_wins = request.form['total_race_wins']
-    total_points_scored = request.form['total_points_scored']
-    total_world_titles = request.form['total_world_titles']
-    total_fastest_laps = request.form['total_fastest_laps']
+    age = int(request.form['age'])
+    pole_positions = int(request.form['pole_positions'])
+    total_race_wins = int(request.form['total_race_wins'])
+    total_points_scored = int(request.form['total_points_scored'])
+    total_world_titles = int(request.form['total_world_titles'])
+    total_fastest_laps = int(request.form['total_fastest_laps'])
     team_name = request.form['team']
     
 
@@ -364,7 +364,7 @@ def root():
 
     print("claims:", claims)
 
-    return render_template('base.html', user=claims, error_message=error_message)
+    return render_template('index.html', user=claims, error_message=error_message)
 
 
 if __name__ == '__main__':
