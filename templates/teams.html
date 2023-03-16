@@ -1,11 +1,28 @@
 {% extends "base.html" %}
+{% block login_menu %}
+
+{% if user %}
+  <li class="nav-item">
+    <button class="nav-link btn btn-link" style="outline: none; font-size: 16px; margin-top: -6px; color: #fff;" id="logout">Logout</button>
+ </li>
+
+{%elif not user %}
+  <li class="nav-item">
+    <button class="nav-link btn btn-link" style="outline: none; font-size: 16px; margin-top: -6px; color: #fff;" id="login">Login</button>
+  </li>
+
+{% endif %}
+
+{% endblock %}
 
 {% block content %}
 
 <div class="row">
+	{% if user %}
 	<div class="col-md-6">
 		<button class="btn btn-primary" id="add-team-button">Add Team</button>
 	</div>
+	{% endif %}
 	<div class="col-md-6">
 		<button class="btn btn-primary" id="filter-teams-button">Filter
 			Teams</button>
@@ -16,6 +33,7 @@
 <div id="error-alert" class="alert alert-danger" role="alert">{{ error }}</div>
 {% endif %}
 </br></br></br></br>
+{% if user %}
 <div id="add-team-form" class="form-container" hidden="true">
 
 	<form id="team-form" action="/add_team" method="POST">
@@ -41,6 +59,7 @@
 	</form>
 
 </div>
+{% endif %}
 
 
 <div id="filter-team-form" class="form-container" hidden="true">
@@ -66,7 +85,9 @@
 			<th>Total Race Wins</th>
 
 			<th>Year Founded</th>
+			{% if user %}
 			<th>Action</th>
+			{% endif %}
 
 		</tr>
 	</thead>
@@ -79,8 +100,10 @@
 			<td>{{ team.total_c_titles }}</td>
 			<td>{{ team.total_race_w}}</td>
 			<td>{{ team.year_founded}}</td>
+			{% if user %}
 			<td><a href="{{url_for('delete_team',name= team.key.name)}}"><i class="fas
 						fa-trash-alt" style="color: red;"></i></a></td>
+						{% endif %}
 		</tr>
 		{% endfor %}
 	</tbody>

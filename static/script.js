@@ -1,14 +1,16 @@
 "use strict";
-window.addEventListener("load", function () {
+window.addEventListener("DOMContentLoaded", function () {
+  
   var logoutButton = document.getElementById("logout");
   var loginButton = document.getElementById("login");
   if (logoutButton) {
     logoutButton.onclick = function () {
       // ask firebase to sign out the user
       firebase.auth().signOut();
+      window.location.href = '/'
     };
   }
-   if (loginButton) {
+  if (loginButton) {
     loginButton.onclick = function () {
       var ui = new firebaseui.auth.AuthUI(firebase.auth());
       ui.start("#firebase-auth-container", uiConfig);
@@ -19,6 +21,14 @@ window.addEventListener("load", function () {
   var uiConfig = {
     signInSuccessUrl: "/",
     signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
+    callbacks: {
+      signInSuccessWithAuthResult : function(authResult,redirectUrl) {
+        authResult.user.getIdToken().then(function (token){
+          document.cookie = "token=" + token;
+        });
+        return true;
+      }
+    }
   };
 
   firebase.auth().onAuthStateChanged(
@@ -29,8 +39,7 @@ window.addEventListener("load", function () {
           document.cookie = "token=" + token;
         });
       } else {
-        var ui = new firebaseui.auth.AuthUI(firebase.auth());
-        ui.start("#firebase-auth-container", uiConfig);
+       
         document.cookie = "token=";
       }
     },

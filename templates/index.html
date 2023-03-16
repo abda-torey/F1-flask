@@ -1,16 +1,48 @@
 {% extends "base.html" %}
 
+{% block login_menu %}
+
+{% if user %}
+  <li class="nav-item">
+    <button class="nav-link btn btn-link" style="outline: none; font-size: 16px; margin-top: -6px; color: #fff;" id="logout">Logout</button>
+ </li>
+
+{%elif not user %}
+  <li class="nav-item">
+    <button class="nav-link btn btn-link" style="outline: none; font-size: 16px; margin-top: -6px; color: #fff;" id="login">Login</button>
+  </li>
+
+{% endif %}
+
+{% endblock %}
+
 {% block content %}
 <div class="container-full-bg">
-<div class="jumbotron jumbotron-fluid text-white bg-dark" style="background-image: url('/static/Images/car.png'); background-size: cover; background-position: center center; height: 100vh;">
-  <div class="container">
-    <h1 class="display-4">Welcome to the F1 Race</h1>
-    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar sic tempor.</p>
-    <hr class="my-4">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.</p>
-    <a class="btn btn-primary btn-lg" href="{{url_for('teams')}}" role="button">Teams</a>
-    <a class="btn btn-primary btn-lg" href="{{url_for('drivers')}}" role="button">Drivers</a>
+  <div class="jumbotron jumbotron-fluid text-white bg-dark"
+    style="background-image: url('/static/Images/car.png'); background-size:
+    cover; background-position: center center; height: 100vh;">
+    <div class="container">
+      <h1 class="display-4">Welcome to the F1 Race</h1>
+      <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus
+        accumsan et viverra justo commodo. Proin sodales pulvinar sic tempor.</p>
+      <hr class="my-4">
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod
+        bibendum laoreet.</p>
+      {% if user %}
+      <a class="btn btn-primary btn-lg" href="{{url_for('teams')}}"
+        role="button">Teams</a>
+      <a class="btn btn-primary btn-lg" href="{{url_for('drivers')}}"
+        role="button">Drivers</a>
+
+      {% elif not user %}
+      <a class="btn btn-primary btn-lg" href="{{url_for('teams')}}"
+        role="button">Compare</a>
+      <a class="btn btn-primary btn-lg" href="{{url_for('drivers')}}"
+        role="button">Delete</a>
+      {% endif %}
+
+    </div>
   </div>
-</div>
 </div>
 {% endblock %}

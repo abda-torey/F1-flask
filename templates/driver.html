@@ -1,11 +1,28 @@
 {% extends "base.html" %}
+{% block login_menu %}
+
+{% if user %}
+  <li class="nav-item">
+    <button class="nav-link btn btn-link" style="outline: none; font-size: 16px; margin-top: -6px; color: #fff;" id="logout">Logout</button>
+ </li>
+
+{%elif not user %}
+  <li class="nav-item">
+    <button class="nav-link btn btn-link" style="outline: none; font-size: 16px; margin-top: -6px; color: #fff;" id="login">Login</button>
+  </li>
+
+{% endif %}
+
+{% endblock %}
 
 {% block content %}
 
 <div class="row">
+    {% if user %}
     <div class="col-md-6">
         <button class="btn btn-primary" id="add-driver-button">Add Driver</button>
     </div>
+    {% endif %}
     <div class="col-md-6">
         <button class="btn btn-primary" id="filter-drivers-button">Filter
             Drivers</button>
@@ -17,51 +34,53 @@
 <div id="error-alert" class="alert alert-danger" role="alert">{{ error }}</div>
 {% endif %}
 </br></br></br></br>
-<div id="add-driver-form" class="container d-flex justify-content-center" hidden="true">
+{% if user %}
+    <div id="add-driver-form" class="container d-flex justify-content-center" hidden="true">
+        
+        <form id="driver-form" action="/add_driver" method="POST" class="col-md-6">
+            <div class="form-group">
+                <label for="firstName">Name:</label>
+                <input type="text" name="firstName" required  class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" name="age" required  class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="pole_positions">Pole Position:</label>
+                <input type="number" name="pole_positions" required  class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="total_race_wins">Total Race Wins:</label>
+                <input type="number" name="total_race_wins" required  class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="total_points_scored">Total Points Scored:</label>
+                <input type="number" name="total_points_scored" required  class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="total_world_titles">Total World Titles:</label>
+                <input type="number" name="total_world_titles" required  class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="total_fastest_laps">Total Fastest Laps:</label>
+                <input type="number" name="total_fastest_laps" required  class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="team">Team Drive For:</label>
+                <select name="team" id="team-select" class="form-control">
+                    
+                    {% for team in teamNames %}
+                    <option value={{ team.key.name }}>{{ team.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" id="cancel-team-btn" class="btn btn-secondary">Cancel</button>
+        </form>
     
-    <form id="driver-form" action="/add_driver" method="POST" class="col-md-6">
-        <div class="form-group">
-            <label for="firstName">Name:</label>
-            <input type="text" name="firstName" required  class="form-control">
-        </div>
-        <div class="form-group">
-            <label for="age">Age:</label>
-            <input type="number" name="age" required  class="form-control">
-        </div>
-        <div class="form-group">
-            <label for="pole_positions">Pole Position:</label>
-            <input type="number" name="pole_positions" required  class="form-control">
-        </div>
-        <div class="form-group">
-            <label for="total_race_wins">Total Race Wins:</label>
-            <input type="number" name="total_race_wins" required  class="form-control">
-        </div>
-        <div class="form-group">
-            <label for="total_points_scored">Total Points Scored:</label>
-            <input type="number" name="total_points_scored" required  class="form-control">
-        </div>
-        <div class="form-group">
-            <label for="total_world_titles">Total World Titles:</label>
-            <input type="number" name="total_world_titles" required  class="form-control">
-        </div>
-        <div class="form-group">
-            <label for="total_fastest_laps">Total Fastest Laps:</label>
-            <input type="number" name="total_fastest_laps" required  class="form-control">
-        </div>
-        <div class="form-group">
-            <label for="team">Team Drive For:</label>
-            <select name="team" id="team-select" class="form-control">
-                
-                {% for team in teamNames %}
-                <option value={{ team.key.name }}>{{ team.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Save</button>
-        <button type="submit" id="cancel-team-btn" class="btn btn-secondary">Cancel</button>
-    </form>
-   
-</div>
+    </div>
+{% endif %}
 
 <!-- <div id="add-driver-form" class="form-container" hidden="true">
     <form id="driver-form" action="/add_driver"
@@ -122,7 +141,9 @@
             <th>Age</th>
             <th>Total Wins</th>
             <th>Team</th>
+            {% if user %}
             <th>Action</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -133,8 +154,10 @@
             <td>{{ driver.age }}</td>
             <td>{{ driver.total_race_wins }}</td>
             <td>{{ driver.teamName}}</td>
+            {% if user %}
             <td><a href="{{url_for('delete_driver',name= driver.key.name)}}"><i
                         class="fas fa-trash-alt" style="color: red;"></i></a></td>
+                        {% endif %}
         </tr>
         {% endfor %}
     </tbody>

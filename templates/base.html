@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>{% block title %}Flask App{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="{{url_for('static', filename='script.js')}}"></script>
         <link
             href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
             rel="stylesheet">
@@ -12,6 +13,11 @@
             />
         <link type="text/css" rel="stylesheet"
             href="{{url_for('static',filename='style.css')}}">
+        <script
+            src="https://www.gstatic.com/firebasejs/ui/4.4.0/firebase-ui-auth.js"></script>
+        <link type="text/css" rel="stylesheet"
+            href="https://www.gstatic.com/firebasejs/ui/4.4.0/firebase-ui-auth.css"
+            />
         <style>
         /* Style for the dark menu */
         .navbar {
@@ -56,23 +62,27 @@
                             <a class="nav-link" href="{{url_for('drivers')}}">Drivers</a>
                         </li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <a href="#" class="dropdown-toggle"
+                                data-toggle="dropdown">
                                 Compare <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{url_for('compare_drivers')}}">Compare Drivers</a></li>
-                                <li><a href="{{url_for('compare_teams')}}">Compare Teams</a></li>
+                                <li><a href="{{url_for('compare_drivers')}}">Compare
+                                        Drivers</a></li>
+                                <li><a href="{{url_for('compare_teams')}}">Compare
+                                        Teams</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/compare">Login</a>
-                        </li>
+                        {% block login_menu %}
+                        
+                        {% endblock %}
                     </ul>
                 </div>
             </div>
         </nav>
 
         <div class="container">
+            <div id="firebase-auth-container"></div>
             {% block content %}
             {% endblock %}
         </div>
