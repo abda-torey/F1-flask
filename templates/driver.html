@@ -121,6 +121,7 @@
         <div>
             <label for="team">Team Drive For:</label>
             <select name="team" id="team-select" class="select">
+                <option value="">Filter by Team</option>
                 {% for team in teamNames %}
                 <option value={{ team.key.name }}>{{ team.name }}</option>
                 {% endfor %}

@@ -2,117 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for
 import google.oauth2.id_token
 from google.auth.transport import requests
 from google.cloud import datastore
+from models.team import Team
+from models.driver import Driver
 
 
 app = Flask(__name__)
 datastore_client = datastore.Client()
 firebase_request_adapter = requests.Request()
-
-
-def create_team(name, year_founded, total_p_pos, total_race_w, total_c_titles, prevSeason_pos):
-    entity_key = datastore_client.key('Teams', name)
-    query = datastore_client.query(kind='Teams')
-
-    query.add_filter('name', '=', name)
-    result = list(query.fetch())
-
-    if len(result) > 0:
-        raise ValueError('Team with name {} already exists.'.format(name))
-    else:
-
-        entity = datastore.Entity(key=entity_key)
-        entity.update({
-            'name': name,
-            'year_founded': year_founded,
-            'total_p_pos': total_p_pos,
-            'total_race_w': total_race_w,
-            'total_c_titles': total_c_titles,
-            'prevSeason_pos': prevSeason_pos
-        })
-        datastore_client.put(entity)
-
-
-def updateTeamDetails(name, year_founded, total_p_pos, total_race_w, total_c_titles, prevSeason_pos):
-    entity_key = datastore_client.key('Teams', name)
-    entity = datastore.Entity(key=entity_key)
-    entity.update({
-        'name': name,
-        'year_founded': year_founded,
-        'total_p_pos': total_p_pos,
-        'total_race_w': total_race_w,
-        'total_c_titles': total_c_titles,
-        'prevSeason_pos': prevSeason_pos
-    })
-    datastore_client.put(entity)
-
-
-def deleteTeam(name):
-    entity_key = datastore_client.key('Teams', name)
-    datastore_client.delete(entity_key)
-
-
-def deleteDriver(name):
-    entity_key = datastore_client.key('Drivers', name)
-    datastore_client.delete(entity_key)
-
-
-def retrieveTeams():
-    query = datastore_client.query(kind='Teams')
-    teams = query.fetch()
-
-    return teams
-
-
-def retrieveDrivers():
-    query = datastore_client.query(kind='Drivers')
-    drivers = query.fetch()
-
-    return drivers
-
-
-def create_driver(name, age, pole_positions, total_race_wins, total_points_scored, total_world_titles, total_fastest_laps, team_name):
-    entity_key = datastore_client.key('Drivers', name)
-
-    query = datastore_client.query(kind='Drivers')
-
-    query.add_filter('name', '=', name)
-    result = list(query.fetch())
-    if len(result) > 0:
-        raise ValueError('Driver with name {} already exists.'.format(name))
-    else:
-        entity = datastore.Entity(key=entity_key)
-
-        entity.update({
-            'name': name,
-            'age': age,
-            'pole_positions': pole_positions,
-            'total_race_wins': total_race_wins,
-            'total_points_scored': total_points_scored,
-            'total_world_titles': total_world_titles,
-            'total_fastest_laps': total_fastest_laps,
-            'teamName': team_name
-
-        })
-        datastore_client.put(entity)
-
-
-def updateDriver(name, age, pole_positions, total_race_wins, total_points_scored, total_world_titles, total_fastest_laps, team_name):
-    entity_key = datastore_client.key('Drivers', name)
-    entity = datastore.Entity(key=entity_key)
-
-    entity.update({
-        'name': name,
-        'age': age,
-        'pole_positions': pole_positions,
-        'total_race_wins': total_race_wins,
-        'total_points_scored': total_points_scored,
-        'total_world_titles': total_world_titles,
-        'total_fastest_laps': total_fastest_laps,
-
-        'teamName': team_name
-
-    })
-    datastore_client.put(entity)
 
 
 @app.route('/filter_drivers', methods=['POST'])
@@ -121,15 +17,15 @@ def filterDriver():
     team = request.form['team']
     wins = request.form['wins']
     query = datastore_client.query(kind='Drivers')
+    # check for each filter attribute, if they exist, add filter to query
     if team:
         query.add_filter('teamName', '=', team)
     if wins:
         query.add_filter('total_race_wins', '>=', int(wins))
 
-    print(type(wins))
     drivers = query.fetch()
 
-    teamNames = list(retrieveTeams())
+    teamNames = list(Team.retrieve_teams())
     id_token = request.cookies.get("token")
     claims = None
     error_message = None
@@ -169,7 +65,7 @@ def filterTeams():
 
 @app.route('/teams')
 def teams():
-    teamNames = retrieveTeams()
+    teamNames = Team.retrieve_teams()
     id_token = request.cookies.get("token")
     claims = None
     error = request.args.get('error')
@@ -203,13 +99,14 @@ def addTeam():
             total_c_titles = int(request.form['total_c_titles'])
             prevSeason_pos = int(request.form['prevSeason_pos'])
             try:
-                create_team(name, year_founded, total_p_pos,
-                            total_race_w, total_c_titles, prevSeason_pos)
+                Team.create_team(name, year_founded, total_p_pos,
+                                 total_race_w, total_c_titles, prevSeason_pos)
+
             except ValueError as exc:
                 error = str(exc)
         except ValueError as exc:
             error_message = str(exc)
-
+    # using redirect to take the user to the new updated list of teams in the teams route
     return redirect(url_for('teams', error=error))
 
 
@@ -253,6 +150,8 @@ def driver_details(name):
 
     return render_template('driverPage.html', user=claims, driverDetails=driverDetails)
 
+# we pass the name in the params because it acts as our key in the Entity Teams
+
 
 @app.route('/editable_team/<string:name>')
 def editable_team(name):
@@ -273,6 +172,8 @@ def editable_team(name):
 
     return render_template('editTeam.html', user=claims, teamDetails=teamDetails)
 
+# we pass the name in the params because it acts as our key in the Entity Drivers
+
 
 @app.route('/editable_driver/<string:name>')
 def editable_driver(name):
@@ -280,7 +181,7 @@ def editable_driver(name):
     query = datastore_client.query(kind='Drivers')
     query.add_filter('__key__', '=', key)
     driverDetails = query.fetch()
-    teamNames = retrieveTeams()
+    teamNames = Team.retrieveTeams()
     id_token = request.cookies.get("token")
     claims = None
     error_message = None
@@ -293,6 +194,8 @@ def editable_driver(name):
             error_message = str(exc)
 
     return render_template('editDriver.html', user=claims, driverDetails=driverDetails, teamNames=teamNames)
+
+# we pass the name in the params because it acts as our key in the Entity Teams
 
 
 @app.route('/update_team/<string:name>', methods=['POST'])
@@ -310,12 +213,14 @@ def update_team(name):
             total_race_w = int(request.form['total_race_w'])
             total_c_titles = int(request.form['total_c_titles'])
             prevSeason_pos = int(request.form['prevSeason_pos'])
-            updateTeamDetails(name, year_founded, total_p_pos,
-                              total_race_w, total_c_titles, prevSeason_pos)
+            Team.update_team_details(name, year_founded, total_p_pos,
+                                     total_race_w, total_c_titles, prevSeason_pos)
         except ValueError as exc:
             error_message = str(exc)
 
     return redirect(url_for('teams'))
+
+# we pass the name in the params because it acts as our key in the Entity Drivers
 
 
 @app.route('/update_driver/<string:name>', methods=['POST'])
@@ -330,6 +235,7 @@ def update_driver(name):
         try:
             claims = google.oauth2.id_token.verify_firebase_token(
                 id_token, firebase_request_adapter)
+        # convert the number values to int before saving to datastore
             name = request.form['firstName'].lower()
             age = int(request.form['age'])
             pole_positions = int(request.form['pole_positions'])
@@ -339,13 +245,15 @@ def update_driver(name):
             total_fastest_laps = int(request.form['total_fastest_laps'])
             team_name = request.form['team']
 
-            updateDriver(name, age,
-                         pole_positions, total_race_wins, total_points_scored, total_world_titles, total_fastest_laps, team_name)
+            Driver.update_driver(name, age,
+                                 pole_positions, total_race_wins, total_points_scored, total_world_titles, total_fastest_laps, team_name)
 
         except ValueError as exc:
             error_message = str(exc)
 
     return redirect(url_for('drivers'))
+
+# we pass the name in the params because it acts as our key in the Entity Teams
 
 
 @app.route('/delete_team/<string:name>')
@@ -357,7 +265,7 @@ def delete_team(name):
         try:
             claims = google.oauth2.id_token.verify_firebase_token(
                 id_token, firebase_request_adapter)
-            deleteTeam(name)
+            Team.delete_team(name)
         except ValueError as exc:
             error_message = str(exc)
 
@@ -373,7 +281,7 @@ def delete_driver(name):
         try:
             claims = google.oauth2.id_token.verify_firebase_token(
                 id_token, firebase_request_adapter)
-            deleteDriver(name)
+            Driver.delete_driver(name)
         except ValueError as exc:
             error_message = str(exc)
 
@@ -382,8 +290,8 @@ def delete_driver(name):
 
 @app.route('/drivers')
 def drivers():
-    teamNames = list(retrieveTeams())
-    drivers = retrieveDrivers()
+    teamNames = list(Team.retrieve_teams())
+    drivers = Driver.retrieve_drivers()
     error = request.args.get('error')
     claims = None
     id_token = request.cookies.get("token")
@@ -403,21 +311,19 @@ def drivers():
 
 @app.route('/compare_drivers')
 def compare_drivers():
-    
 
     id_token = request.cookies.get("token")
     claims = None
     error_message = None
 
-    drivers = list(retrieveDrivers())
+    drivers = list(Driver.retrieve_drivers())
 
     if id_token:
         try:
             claims = google.oauth2.id_token.verify_firebase_token(
                 id_token, firebase_request_adapter)
-            return render_template('compareDrivers.html',user=claims, drivers=drivers)
-  
-            
+            return render_template('compareDrivers.html', user=claims, drivers=drivers)
+
         except ValueError as exc:
             error_message = str(exc)
     return redirect(url_for('root'))
@@ -425,7 +331,7 @@ def compare_drivers():
 
 @app.route('/compare_teams')
 def compare_teams():
-    teamNames = list(retrieveTeams())
+    teamNames = list(Team.retrieve_teams())
 
     id_token = request.cookies.get("token")
     claims = None
@@ -442,18 +348,18 @@ def compare_teams():
 
     return redirect(url_for('root'))
 
-   
 
 @app.route('/compare_t', methods=['POST'])
 def Compare_T():
     team1_name = request.form['team1']
     team2_name = request.form['team2']
+# we search for each team separately and pass the result to our render
     team1 = datastore_client.get(
         datastore_client.key('Teams', team1_name))
     team2 = datastore_client.get(
         datastore_client.key('Teams', team2_name))
 
-    teamNames = list(retrieveTeams())
+    teamNames = list(Team.retrieve_teams())
     id_token = request.cookies.get("token")
     claims = None
     error_message = None
@@ -476,7 +382,7 @@ def Compare():
     driver2 = datastore_client.get(
         datastore_client.key('Drivers', driver2_name))
 
-    drivers = list(retrieveDrivers())
+    drivers = list(Driver.retrieve_drivers())
 
     id_token = request.cookies.get("token")
     claims = None
@@ -512,8 +418,8 @@ def addDriver():
             team_name = request.form['team']
 
             try:
-                create_driver(name, age,
-                              pole_positions, total_race_wins, total_points_scored, total_world_titles, total_fastest_laps, team_name)
+                Driver.create_driver(name, age,
+                                     pole_positions, total_race_wins, total_points_scored, total_world_titles, total_fastest_laps, team_name)
             except ValueError as exc:
                 error = str(exc)
             return redirect(url_for('drivers', error=error))
