@@ -8,13 +8,14 @@ window.addEventListener("DOMContentLoaded", function () {
       // ask firebase to sign out the user
       firebase.auth().signOut();
       window.location.href = '/'
+      document.cookie = "token=;path=/";
     };
   }
   if (loginButton) {
     loginButton.onclick = function () {
       var ui = new firebaseui.auth.AuthUI(firebase.auth());
       ui.start("#firebase-auth-container", uiConfig);
-      document.cookie = "token=";
+      document.cookie = "token=" + token + ";path=/";
     };
   }
 
@@ -24,7 +25,7 @@ window.addEventListener("DOMContentLoaded", function () {
     callbacks: {
       signInSuccessWithAuthResult : function(authResult,redirectUrl) {
         authResult.user.getIdToken().then(function (token){
-          document.cookie = "token=" + token;
+          document.cookie = "token=" + token + ";path=/";
         });
         return true;
       }

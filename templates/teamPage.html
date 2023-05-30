@@ -58,6 +58,7 @@
             </tr>
         </tbody>
     </table>
+    {% if user %}
     <div style="display: flex; justify-content: center; align-items: center;">
         
         <a href="{{url_for('editable_team',name = team.key.name)}}"><button class="btn btn-primary">
@@ -66,6 +67,7 @@
             </button></a>
         </button>
       </div>
+      {% endif %}
     {% endfor %}
 </div>
 {% endblock %}

@@ -93,7 +93,7 @@ def addTeam():
             claims = google.oauth2.id_token.verify_firebase_token(
                 id_token, firebase_request_adapter)
             name = request.form['name'].lower()
-            year_founded = request.form['year_founded']
+            year_founded = int(request.form['year_founded'])
             total_p_pos = int(request.form['total_p_pos'])
             total_race_w = int(request.form['total_race_w'])
             total_c_titles = int(request.form['total_c_titles'])
@@ -181,7 +181,7 @@ def editable_driver(name):
     query = datastore_client.query(kind='Drivers')
     query.add_filter('__key__', '=', key)
     driverDetails = query.fetch()
-    teamNames = Team.retrieveTeams()
+    teamNames = Team.retrieve_teams()
     id_token = request.cookies.get("token")
     claims = None
     error_message = None
@@ -353,6 +353,8 @@ def compare_teams():
 def Compare_T():
     team1_name = request.form['team1']
     team2_name = request.form['team2']
+    print(team1_name)
+    print(team2_name)
 # we search for each team separately and pass the result to our render
     team1 = datastore_client.get(
         datastore_client.key('Teams', team1_name))
